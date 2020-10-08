@@ -1,5 +1,7 @@
 FROM wordpress:php7.2-fpm
 
+ARG DEBUG_IP=host.docker.internal
+
 RUN apt update && apt install openssh-server libxml2-dev libmemcached-tools memcached zlib1g-dev libpq-dev libmemcached-dev vim nginx -y \
     && echo '' | pecl install memcached && docker-php-ext-enable memcached \
     && pecl install xdebug && docker-php-ext-enable xdebug 
@@ -29,6 +31,10 @@ EXPOSE 443
 
 COPY memcached/memcached.conf /etc/memcached.conf
 COPY php/ /usr/local/etc/
+
 COPY nginx/default /etc/nginx/sites-available/
 
-ENTRYPOINT service ssh start && service memcached start && service nginx start && echo "root:$SSH_PASSWORD" | chpasswd && echo "www-data:$SSH_PASSWORD" | chpasswd && docker-entrypoint.sh php-fpm
+COPY wp-debug-init.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/wp-debug-init.sh
+
+ENTRYPOINT /usr/local/bin/wp-debug-init.sh php-fpm

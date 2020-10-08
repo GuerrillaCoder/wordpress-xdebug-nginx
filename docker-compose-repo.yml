@@ -14,10 +14,7 @@ services:
         ports:
             - "3156:3306"
     wordpress:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        image: wordpress-debug-nginx:local
+        image: digitalreach/wordpress-xdebug-nginx
         container_name: wordpress-debug-nginx
         ports: 
             - "5330:2222"
@@ -33,7 +30,7 @@ services:
             WORDPRESS_DB_USER: wordpress
             WORDPRESS_DB_PASSWORD: wordpress
             WORDPRESS_DB_NAME: wordpress
-            DEBUG_IP: 192.168.0.1
+            XDEBUG_CONFIG: remote_host=host.docker.internal
 volumes:
     db_data: {}
     wp_data: {}
