@@ -4,7 +4,7 @@ ARG DEBUG_IP=host.docker.internal
 
 RUN apt update && apt install openssh-server libxml2-dev libmemcached-tools memcached zlib1g-dev libpq-dev libmemcached-dev vim nginx -y \
     && echo '' | pecl install memcached && docker-php-ext-enable memcached \
-    && pecl install xdebug && docker-php-ext-enable xdebug 
+    && pecl install xdebug && docker-php-ext-enable xdebug && docker-php-ext-install soap
 
 RUN echo 'Port 			2222\n\
 ListenAddress 		0.0.0.0\n\
